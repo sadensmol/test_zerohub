@@ -9,7 +9,12 @@ import java.math.BigDecimal
 class ConvertService {
     private val conversions = mutableSetOf<Conversion>()
 
-    //todo rework with graphs?
+    /**
+     * additional structure to store cross conversion paths between different currencies
+     * which cannot be directly converted
+     *
+     * todo change to graph?
+     */
     private val conversionChain = mutableMapOf<String, List<Conversion>>()
 
     private fun getConversionChain(fromCurrency: String, toCurrency: String):List<Conversion> =
@@ -21,7 +26,10 @@ class ConvertService {
          ?: throw ConversionException("Currencies for $fromCurrency/$toCurrency conversion aren't configured")
 
     private fun createConversionChain(fromCurrency: String, toCurrency: String): List<Conversion>? {
+        //bfs algorithm
         TODO()
+
+
     }
 
     suspend fun convert(fromCurrency: String, toCurrency: String, fromAmount: String): BigDecimal {
@@ -41,3 +49,4 @@ class ConvertService {
 
 
 }
+
