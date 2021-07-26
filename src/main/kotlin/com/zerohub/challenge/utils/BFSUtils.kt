@@ -44,6 +44,7 @@ class BFSUtils {
             if (currentList.contains(to)) {
                 valueFound = true
                 result.add(currentNode)
+                result.add(to)
                 break
             }else {
                 result.add(currentNode)

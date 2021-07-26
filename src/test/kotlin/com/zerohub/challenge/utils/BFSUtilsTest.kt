@@ -25,7 +25,7 @@ class BFSUtilsTest {
 
     @Test
     fun `when self to self and bfs contains self to self then return self`() {
-        assertEquals(listOf(TEST_CURRENCY_1),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_1, listOf("$TEST_CURRENCY_1-$TEST_CURRENCY_1")))
+        assertEquals(listOf(TEST_CURRENCY_1,TEST_CURRENCY_1),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_1, listOf("$TEST_CURRENCY_1-$TEST_CURRENCY_1")))
     }
 
     @Test
@@ -38,14 +38,14 @@ class BFSUtilsTest {
 
     @Test
     fun `when bfs contains required conversions directly then return this conversion`() {
-        assertEquals(listOf(TEST_CURRENCY_1),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_2,
+        assertEquals(listOf(TEST_CURRENCY_1,TEST_CURRENCY_2),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_2,
             listOf("$TEST_CURRENCY_1-$TEST_CURRENCY_2"))
         )
     }
 
     @Test
     fun `when bfs contains required conversions through 3 different conversion then return the correct conversion chain`() {
-        assertEquals(listOf(TEST_CURRENCY_1,TEST_CURRENCY_2,TEST_CURRENCY_3),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_4,
+        assertEquals(listOf(TEST_CURRENCY_1,TEST_CURRENCY_2,TEST_CURRENCY_3,TEST_CURRENCY_4),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_4,
             listOf("$TEST_CURRENCY_1-$TEST_CURRENCY_2",
                 "$TEST_CURRENCY_2-$TEST_CURRENCY_3",
                 "$TEST_CURRENCY_3-$TEST_CURRENCY_4",
@@ -55,7 +55,7 @@ class BFSUtilsTest {
 
     @Test
     fun `when bfs contains required conversions but contains cycles as well then return the correct conversion chain`() {
-        assertEquals(listOf(TEST_CURRENCY_1,TEST_CURRENCY_2,TEST_CURRENCY_3),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_4,
+        assertEquals(listOf(TEST_CURRENCY_1,TEST_CURRENCY_2,TEST_CURRENCY_3,TEST_CURRENCY_4),bfsUtils.findShortestPath(TEST_CURRENCY_1, TEST_CURRENCY_4,
             listOf("$TEST_CURRENCY_1-$TEST_CURRENCY_2",
                 "$TEST_CURRENCY_2-$TEST_CURRENCY_1",
                 "$TEST_CURRENCY_2-$TEST_CURRENCY_3",
@@ -68,4 +68,14 @@ class BFSUtilsTest {
 
 
 
+    @Test
+    fun `when bfs contains required reverse conversions  through 3 different conversions then return the correct conversion chain`() {
+        assertEquals(listOf(TEST_CURRENCY_4,TEST_CURRENCY_3,TEST_CURRENCY_2,TEST_CURRENCY_1),
+            bfsUtils.findShortestPath(TEST_CURRENCY_4, TEST_CURRENCY_1,
+            listOf("$TEST_CURRENCY_1-$TEST_CURRENCY_2","$TEST_CURRENCY_2-$TEST_CURRENCY_1",
+                "$TEST_CURRENCY_2-$TEST_CURRENCY_3","$TEST_CURRENCY_3-$TEST_CURRENCY_2",
+                "$TEST_CURRENCY_3-$TEST_CURRENCY_4","$TEST_CURRENCY_4-$TEST_CURRENCY_3",
+            ))
+        )
+    }
 }

@@ -12,9 +12,10 @@ import java.math.BigDecimal
 @GrpcService
 class ConvertController(private val convertService: ConvertService) : RatesServiceGrpcKt.RatesServiceCoroutineImplBase() {
     override suspend fun convert(request: ConvertRequest): ConvertResponse {
-        val price = convertService.convert(request.fromCurrency, request.toCurrency,request.fromAmount)
+        val price = convertService.convert(request.fromCurrency, request.toCurrency, request.fromAmount)
 
-        return price.toConvertResponse()
+        //fixme required by provided tests
+        return price.setScale(4).toConvertResponse()
     }
 
     override suspend fun publish(request: PublishRequest): Empty {
