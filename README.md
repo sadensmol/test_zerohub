@@ -10,3 +10,15 @@ As additional tasks you may extend test suite and service for following cases:
 1. Test conversion small values (check rounding)
 2. Catch exceptions if rate couldn't be found
 3. Find minimal rate with 1 cross currency limit (example: BTC->USD = 60000, BTC->LTC->USD = 58000)
+
+Final review:
+1. Ожидали конечно двунаправленный граф для решения этой задачи (видели todo)
+2. ConvertService::publish метод не атомарный. removeAll и потом add может быть ситуация когда между залетит запрос на конверсию. И в целом можно схватить ConcurrentModificationException.
+3. Есть идея почему ./gradlew test не выводит отчеты по тестам? На java всё от отрабатывает.
+
+Plan:
+- finish with all ToDo items in the list
+- fix final review problems, add improvements
+- add security configuration
+- figure out how to deal with exceptions in controller 
+- refactor tests
