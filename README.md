@@ -13,7 +13,6 @@ As additional tasks you may extend test suite and service for following cases:
 
 Final review:
 1. Ожидали конечно двунаправленный граф для решения этой задачи (видели todo)
-2. ConvertService::publish метод не атомарный. removeAll и потом add может быть ситуация когда между залетит запрос на конверсию. И в целом можно схватить ConcurrentModificationException.
 3. Есть идея почему ./gradlew test не выводит отчеты по тестам? На java всё от отрабатывает.
 
 Plan:

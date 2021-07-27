@@ -7,6 +7,8 @@ import com.zerohub.challenge.utils.BFSUtils
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArraySet
 
 @Service
 /**
@@ -15,7 +17,7 @@ import java.math.RoundingMode
 
 
 class ConvertService(private val bfsUtils:BFSUtils) {
-    private val conversions = mutableSetOf<Conversion>()
+    private val conversions = CopyOnWriteArraySet<Conversion>()
 
 
     /**
@@ -25,7 +27,7 @@ class ConvertService(private val bfsUtils:BFSUtils) {
      *
      * todo change to graph?
      */
-    private val conversionChain = mutableMapOf<String, List<Conversion>>()
+    private val conversionChain = ConcurrentHashMap<String, List<Conversion>>()
 
     private fun getConversionChain(fromCurrency: String, toCurrency: String):List<Conversion> =
         with( conversionChain["$fromCurrency-$toCurrency"]?:createConversionChain(fromCurrency,toCurrency)) {
@@ -35,10 +37,6 @@ class ConvertService(private val bfsUtils:BFSUtils) {
 
     private fun createConversionChain(fromCurrency: String, toCurrency: String): List<Conversion> {
         val listCurrencies = conversions.map { conversion -> "${conversion.from}-${conversion.to}" } +conversions.map { conversion -> "${conversion.to}-${conversion.from}" }
-        val t = bfsUtils.findShortestPath(fromCurrency,  toCurrency,listCurrencies)
-        val tt = bfsUtils.findShortestPath(fromCurrency,  toCurrency,listCurrencies).zipWithNext()
-
-        print(tt)
         val conversions = bfsUtils.findShortestPath(fromCurrency,  toCurrency,listCurrencies)
                 .zipWithNext()
                 .mapNotNull { pair->
