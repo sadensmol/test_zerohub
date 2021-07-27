@@ -2,17 +2,21 @@ package com.zerohub.challenge.service
 
 import com.zerohub.challenge.model.Conversion
 import com.zerohub.challenge.model.ConversionException
+import com.zerohub.challenge.model.PublishingException
 import com.zerohub.challenge.utils.BFSUtils
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Service
 /**
  * fixme - store just conversion coefficient instead of the whole conversion chain!
  */
 
+
 class ConvertService(private val bfsUtils:BFSUtils) {
     private val conversions = mutableSetOf<Conversion>()
+
 
     /**
      * additional structure to store cross conversion paths between different currencies
@@ -54,14 +58,13 @@ class ConvertService(private val bfsUtils:BFSUtils) {
      * conversion is based on published conversions
      *
      */
-    suspend fun convert(fromCurrency: String, toCurrency: String, fromAmount: String): BigDecimal {
-        if (fromAmount.isBlank()) throw ConversionException("Incorrect amount $fromAmount")
-
+    suspend fun convert(fromCurrency: String, toCurrency: String, fromAmount: BigDecimal): BigDecimal {
         if (fromCurrency.isBlank() || toCurrency.isBlank()) throw ConversionException("Incorrect currency $fromCurrency-$toCurrency")
 
-        var amount = BigDecimal(fromAmount)
-        if (fromCurrency == toCurrency) return amount
+        //fixme move to external const
+        if (fromCurrency == toCurrency) return fromAmount
 
+        var amount = fromAmount
         val conversionChain = getConversionChain(fromCurrency, toCurrency)
 
         if (conversionChain.isEmpty())
@@ -75,15 +78,17 @@ class ConvertService(private val bfsUtils:BFSUtils) {
             }
         }
 
-        return amount
 
+        //fixme move to external const
+        return amount.setScale(4)
     }
 
-    // todo check the price isn't null
     // bigdecil division by 0.000
-    suspend fun publish(baseCurrency: String, quoteCurrency: String, price: String) {
+    suspend fun publish(baseCurrency: String, quoteCurrency: String, price:BigDecimal) {
+        if (price.compareTo(BigDecimal.ZERO) ==0) throw PublishingException("No rate $price for $baseCurrency/$quoteCurrency")
+
         conversions.removeAll(conversions.filter { conversion -> conversion.from ==baseCurrency && conversion.to == quoteCurrency })
-        conversions.add(Conversion(from = baseCurrency, to = quoteCurrency, rate = BigDecimal(price)))
+        conversions.add(Conversion(from = baseCurrency, to = quoteCurrency, rate = price))
         conversionChain.clear()
     }
 

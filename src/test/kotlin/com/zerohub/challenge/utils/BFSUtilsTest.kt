@@ -1,11 +1,11 @@
 package com.zerohub.challenge.utils
 
-import com.zerohub.challenge.BaseTest
+import com.zerohub.challenge.UnitTest
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-@BaseTest
+@UnitTest
 /**
  * todo add validation tests
  */

@@ -2,7 +2,7 @@ package com.zerohub.challenge
 
 import org.junit.jupiter.api.Test
 
-@BaseTest
+@IntegrationTest
 class ChallengeApplicationTest {
     @Test
     fun contextLoads() {

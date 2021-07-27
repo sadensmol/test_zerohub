@@ -1,5 +1,6 @@
 import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 
 plugins {
   id("org.springframework.boot") version "2.5.3"
@@ -48,7 +49,16 @@ dependencies {
 
 tasks.withType<Test>().configureEach {
   useJUnitPlatform()
+  testLogging{
+    events(FAILED,SKIPPED,STANDARD_OUT,STANDARD_ERROR)
+
+    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    showExceptions = true
+    showCauses = true
+    showStackTraces = true
+  }
 }
+
 
 tasks.withType<KotlinCompile> {
   kotlinOptions {

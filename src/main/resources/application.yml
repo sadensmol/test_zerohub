@@ -1,4 +1,4 @@
 grpc:
   server:
     port: ${GRPC_PORT:7080}
-
+    in-process-name: zerohub

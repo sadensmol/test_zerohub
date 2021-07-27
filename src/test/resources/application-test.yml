@@ -1,0 +1,6 @@
+grpc:
+  client:
+    zerohub:
+      address: "in-process:zerohub"
+
+
