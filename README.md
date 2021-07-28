@@ -11,11 +11,16 @@ As additional tasks you may extend test suite and service for following cases:
 2. Catch exceptions if rate couldn't be found
 3. Find minimal rate with 1 cross currency limit (example: BTC->USD = 60000, BTC->LTC->USD = 58000)
 
-Final review:
+Pre - Final review:
 1. Ожидали конечно двунаправленный граф для решения этой задачи (видели todo)
 3. Есть идея почему ./gradlew test не выводит отчеты по тестам? На java всё от отрабатывает.
 
+Final review
+По прежнему не пофикшена проблема с атомарностью операций removeAll и add. Плюс код стал еще более медленный из-за использования copyOnWrite структур.
+В целом гораздо проще было бы использовать графы. Но даже с текущей реализацией переделать conversions на ConcurrentHashMap с доступом по ключу и не было бы проблем с атомарностью и скорость построения conversionChain была бы быстрее с доступом по ключу и бинарным поиском, чем фильтровать список.
+
 Plan:
+- move to graph structure
 - finish with all ToDo items in the list
 - fix final review problems, add improvements
 - add security configuration
